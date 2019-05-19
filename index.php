@@ -10,15 +10,14 @@ spl_autoload_register(
 
 use uku\Chord;
 
-$frets = '0123';
-$text = 'C';
+$options = [
+    'frets' => str_split('0124'),
+    'text' => 'C'
+];
 
-$chord = new Chord();
-$chord->drawFrets();
+$chord = new Chord($options);
 $img = $chord->getImage();
 
-header( "Content-type: image/png" );
-imagepng( $img );
-imagedestroy( $img );
-
-
+header("Content-type: image/png");
+imagepng($img);
+imagedestroy($img);
