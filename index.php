@@ -11,13 +11,16 @@ spl_autoload_register(
 use uku\Chord;
 
 $options = [
-    'frets' => str_split('0124'),
+    'fingers' => str_split('0124'),
     'text' => 'C'
 ];
 
 $chord = new Chord($options);
 $img = $chord->getImage();
 
-header("Content-type: image/png");
+if (empty($_REQUEST['debug'])) {
+    header("Content-type: image/png");
+}
+
 imagepng($img);
 imagedestroy($img);

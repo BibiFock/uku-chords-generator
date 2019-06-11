@@ -2,9 +2,7 @@
 
 namespace uku;
 
-use uku\helpers\Image;
-
-class Chord
+class FretBoard
 {
     const BASE_WIDTH = 25;
     const BASE_HEIGHT = 10;
@@ -13,32 +11,30 @@ class Chord
     protected $y = 0;
 
     protected $fingers = false;
-    protected $name = false;
     protected $img = false;
 
-    public function __construct($options = [])
+    public function __construct($fingers = [])
     {
-        foreach ($options as $key => $value) {
-            if (isset($this->{$key})) {
-                $this->{$key} = $value;
-            }
-        }
+        $this->fingers = $fingers;
     }
 
     public function getImage()
     {
-        $fretBoard = new FretBoard($this->fingers);
-        $imgFretBoard = $fretBoard->getImage();
-
-        $this->img = Image::makeImage(static::BASE_WIDTH + 2.5 * 2, $fretBoard->getTotalHeight() + 10);
-
-        imagecopy($this->img, $imgFretBoard, 2.5, 5, 0, 0, static::BASE_WIDTH, $fretBoard->getTotalHeight());
+        $this->draw();
 
         return $this->img;
     }
 
-    protected function drawFrets()
+    public function getTotalHeight()
     {
+        return static::BASE_HEIGHT * $this->getNbFrets() + 1 + ($this->needFirstFrets() ? 2 : 0);
+    }
+
+    protected function draw()
+    {
+        $this->img = imagecreate(static::BASE_WIDTH, $this->getTotalHeight());
+        imagecolorallocate($this->img, 255, 255, 255);
+
         for ($i = 0; $i < $this->getNbFrets(); $i++) {
             $this->makeFrets($i);
         }
@@ -69,11 +65,6 @@ class Chord
         }
     }
 
-    protected function getTotalHeight()
-    {
-        return static::BASE_HEIGHT * $this->getNbFrets() + 1 + ($this->needFirstFrets() ? 2 : 0);
-    }
-
     protected function getNbFrets()
     {
         return 4;
@@ -81,12 +72,12 @@ class Chord
 
     protected function needFirstFrets()
     {
-        if (empty($this->frets)) {
+        if (empty($this->fingers)) {
             return true;
         }
 
-        foreach ($this->frets as $fret) {
-            if ($fret >= $this->getNbFrets()) {
+        foreach ($this->fingers as $fret) {
+            if ($fret > $this->getNbFrets()) {
                 return false;
             }
         }
