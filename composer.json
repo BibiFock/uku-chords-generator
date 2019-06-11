@@ -1,0 +1,14 @@
+{
+    "autoload": {
+        "classmap": [
+            "classes/"
+        ]
+    },
+    "scripts": {
+        "test": "phpunit --colors='always'"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8",
+        "sempro/phpunit-pretty-print": "^1.0"
+    }
+}
