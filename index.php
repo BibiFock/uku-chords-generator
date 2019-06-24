@@ -11,8 +11,8 @@ spl_autoload_register(
 use uku\Chord;
 
 $options = [
-    'fingers' => str_split('0124'),
-    'text' => 'C'
+    'fingers' => str_split($_REQUEST['fingers'] ?? '0124'),
+    'text' => $_REQUEST['text'] ?? 'C'
 ];
 
 $chord = new Chord($options);

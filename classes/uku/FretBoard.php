@@ -4,10 +4,11 @@ namespace uku;
 
 class FretBoard
 {
-    const BASE_WIDTH = 25;
+    const BASE_WIDTH = 35;
     const BASE_HEIGHT = 10;
+    const BORDER = 5;
 
-    protected $x = 0;
+    protected $x = FretBoard::BORDER;
     protected $y = 0;
 
     protected $fingers = false;
@@ -15,7 +16,12 @@ class FretBoard
 
     public function __construct($fingers = [])
     {
-        $this->fingers = $fingers;
+        $this->fingers = array_map(
+            function ($finger) {
+                return (int) $finger;
+            },
+            $fingers
+        );
     }
 
     public function getImage()
@@ -27,7 +33,7 @@ class FretBoard
 
     public function getTotalHeight()
     {
-        return static::BASE_HEIGHT * $this->getNbFrets() + 1 + ($this->needFirstFrets() ? 2 : 0);
+        return static::BASE_HEIGHT * $this->getNbFrets() + 3;
     }
 
     protected function draw()
@@ -36,11 +42,11 @@ class FretBoard
         imagecolorallocate($this->img, 255, 255, 255);
 
         for ($i = 0; $i < $this->getNbFrets(); $i++) {
-            $this->makeFrets($i);
+            $this->makeFrets($i, $this->getFingersByFret($i));
         }
     }
 
-    protected function makeFrets($line)
+    protected function makeFrets($line, $fingers)
     {
         $grid = imagecolorallocate($this->img, 0, 0, 0);
 
@@ -50,24 +56,48 @@ class FretBoard
                 $this->img,
                 $this->x,
                 $this->y,
-                static::BASE_WIDTH,
+                static::BASE_WIDTH - static::BORDER - 1,
                 $this->y + 2,
                 $grid
             );
-            $y += 2;
         }
-        imageline($this->img, $this->x, $y, static::BASE_WIDTH, $y, $grid);
-        imageline($this->img, $this->x, $y + static::BASE_HEIGHT, static::BASE_WIDTH, $y + static::BASE_HEIGHT, $grid);
+        $y += 2;
+        imageline($this->img, $this->x, $y, static::BASE_WIDTH - static::BORDER - 1, $y, $grid);
+        imageline($this->img, $this->x, $y + static::BASE_HEIGHT, static::BASE_WIDTH - static::BORDER - 1, $y + static::BASE_HEIGHT, $grid);
 
         for ($i = 0; $i < 4; $i++) {
             $x = $this->x + $i*8;
             imageline($this->img, $x, $y, $x, $y + static::BASE_HEIGHT, $grid);
+            if (!in_array($i, $fingers)) {
+                continue;
+            }
+            $finger = new Finger();
+            imagecopy(
+                $this->img,
+                $finger->draw(),
+                $x - floor($finger::BASE_WIDTH / 2),
+                $y - floor($finger::BASE_HEIGHT / 2) + static::BASE_HEIGHT / 2,
+                0,
+                0,
+                $finger::BASE_WIDTH,
+                $finger::BASE_HEIGHT
+            );
         }
     }
 
     protected function getNbFrets()
     {
         return 4;
+    }
+
+    protected function getFingersByFret($fret)
+    {
+        return array_keys(array_filter(
+            $this->fingers,
+            function ($finger) use ($fret) {
+                return $finger === ($fret + 1);
+            }
+        ));
     }
 
     protected function needFirstFrets()
