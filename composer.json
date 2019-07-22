@@ -8,7 +8,7 @@
         "test": "phpunit --colors='always'"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8",
+        "phpunit/phpunit": "^7",
         "sempro/phpunit-pretty-print": "^1.0"
     }
 }

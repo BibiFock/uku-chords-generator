@@ -48,7 +48,8 @@ class FretBoard
 
     protected function makeFrets($line, $fingers)
     {
-        $grid = imagecolorallocate($this->img, 0, 0, 0);
+        $black = imagecolorallocate($this->img, 0, 0, 0);
+        $grid = imagecolorallocate($this->img, 140, 120, 100);
 
         $y = $line * 10;
         if ($this->needFirstFrets()) {
@@ -58,7 +59,7 @@ class FretBoard
                 $this->y,
                 static::BASE_WIDTH - static::BORDER - 1,
                 $this->y + 2,
-                $grid
+                $black
             );
         }
         $y += 2;
