@@ -21,7 +21,8 @@ $chord = new Chord($options);
 $img = $chord->getImage();
 
 if (empty($_REQUEST['debug'])) {
-    header("Content-type: image/png");
+    header('Content-type: image/png');
+    header('Content-Disposition: inline; filename="' . $options['name'] . '"');
 }
 
 imagepng($img);

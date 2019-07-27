@@ -20,7 +20,13 @@ class FretBoardTest extends TestCase
     public function testGetBaseLineShouldIgnoreEmptyFrets()
     {
         $this->getBaseLine('0,5,6,7', [4, 8]);
-        $this->getBaseLine('0,0,5,0', [4, 8]);
+        $this->getBaseLine('0,0,5,7', [4, 8]);
+    }
+
+    public function testGetBaseLineShouldCenterFinger()
+    {
+        $this->getBaseLine('0,0,5,0', [3, 7]);
+        $this->getBaseLine('0,6,5,0', [3, 7]);
     }
 
     public function testGetBaseLineShouldTookShowAllFingers()
