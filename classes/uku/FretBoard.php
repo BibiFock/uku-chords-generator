@@ -9,6 +9,8 @@ class FretBoard
     const BASE_WIDTH = 45;
     const BASE_HEIGHT = 10;
     const FRET_WIDTH = 8;
+    const FIRST_FRET_HEIGHT = 2;
+
     const BORDER = 10;
     const NB_FRET_MIN = 4;
 
@@ -40,22 +42,13 @@ class FretBoard
 
     public function getTotalHeight()
     {
-        return $this->y + static::BASE_HEIGHT * $this->getNbFrets() + 3;
+        return static::FIRST_FRET_HEIGHT + static::BASE_HEIGHT * $this->getNbFrets() + 8;
     }
 
     protected function draw()
     {
         $this->img = imagecreate(static::BASE_WIDTH, $this->getTotalHeight());
         imagecolorallocate($this->img, 255, 255, 255);
-
-        // first empty fret
-        foreach ($this->getFingersByFret(0) as $idString) {
-            $this->addFinger(
-                $this->getFingerX($idString),
-                -ceil(Finger::BASE_HEIGHT/2),
-                true
-            );
-        }
 
         if ($this->needFirstFrets()) {
             imagefilledrectangle(
@@ -73,6 +66,15 @@ class FretBoard
                 $this->fretMin + 2,
                 $this->x - static::BORDER,
                 $this->y + 2 * static::BASE_HEIGHT
+            );
+        }
+
+        // first empty fret
+        foreach ($this->getFingersByFret(0) as $idString) {
+            $this->addFinger(
+                $this->getFingerX($idString),
+                -ceil(Finger::BASE_HEIGHT/2),
+                true
             );
         }
         // then the other frets

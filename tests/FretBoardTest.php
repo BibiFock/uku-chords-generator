@@ -6,6 +6,18 @@ use uku\FretBoard;
 
 class FretBoardTest extends TestCase
 {
+
+    public function testHeigthShouldBeTheSameWithOrWithoutFirstFret()
+    {
+        $fret = new FretBoard(str_split('0,0,0,0'));
+        $fretWithoutFirst = new FretBoard(str_split('5,5,5,5'));
+
+        $this->assertEquals(
+            $fret->getTotalHeight(),
+            $fretWithoutFirst->getTotalHeight()
+        );
+    }
+
     public function testGetBaseLineShouldAtLeastReturn4FirstLines()
     {
         $this->getBaseLine('0,0,0,0', [0, 4]);

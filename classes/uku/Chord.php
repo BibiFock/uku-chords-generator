@@ -34,7 +34,7 @@ class Chord
 
         $this->img = Image::makeImage(
             static::BASE_WIDTH,
-            $fretBoard->getTotalHeight() + static::BASE_HEIGHT + static::BORDER_Y
+            static::BASE_HEIGHT + static::BORDER_Y + $fretBoard->getTotalHeight()
         );
 
         $y = static::BASE_HEIGHT - 1;
