@@ -141,7 +141,7 @@ class FretBoard
             }
         );
         if (empty($fingers)) {
-            return [1, static::NB_FRET_MIN];
+            return [0, static::NB_FRET_MIN];
         }
         $min = min($fingers) - 1;
         $max = max($fingers);
