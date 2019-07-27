@@ -12,6 +12,11 @@ class Finger
     protected $empty = false;
     protected $img = false;
 
+    public static function getImg($empty = false)
+    {
+        return (new Finger($empty))->draw();
+    }
+
     public function __construct($empty = false)
     {
         $this->empty = $empty;
