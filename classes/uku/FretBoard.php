@@ -70,9 +70,9 @@ class FretBoard
         } else {
             Image::writeText(
                 $this->img,
+                $this->fretMin + 2,
                 $this->x - static::BORDER,
-                $this->y + 2 * static::BASE_HEIGHT,
-                (string) ($this->fretMin + 2)
+                $this->y + 2 * static::BASE_HEIGHT
             );
         }
         // then the other frets
