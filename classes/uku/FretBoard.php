@@ -2,16 +2,21 @@
 
 namespace uku;
 
+use uku\helpers\Image;
+
 class FretBoard
 {
-    const BASE_WIDTH = 35;
+    const BASE_WIDTH = 45;
     const BASE_HEIGHT = 10;
     const FRET_WIDTH = 8;
-    const BORDER = 5;
+    const BORDER = 10;
+    const NB_FRET_MIN = 4;
 
     protected $x = FretBoard::BORDER;
     protected $y = 6;
 
+    protected $fretMin = false;
+    protected $fretMax = false;
     protected $fingers = false;
     protected $img = false;
 
@@ -23,6 +28,7 @@ class FretBoard
             },
             $fingers
         );
+        [$this->fretMin, $this->fretMax] = $this->getBaseLine();
     }
 
     public function getImage()
@@ -45,24 +51,12 @@ class FretBoard
         // first empty fret
         foreach ($this->getFingersByFret(0) as $idString) {
             $this->addFinger(
-                $this->getFingerX($idString - 1),
+                $this->getFingerX($idString),
                 -ceil(Finger::BASE_HEIGHT/2),
                 true
             );
         }
 
-        // then the other frets
-        for ($i = 0; $i < $this->getNbFrets(); $i++) {
-            $this->makeFrets($i, $this->getFingersByFret($i));
-        }
-    }
-
-    protected function makeFrets($line, $fingers)
-    {
-        $black = imagecolorallocate($this->img, 0, 0, 0);
-        $grid = imagecolorallocate($this->img, 140, 120, 100);
-
-        $y = $this->y + $line * 10;
         if ($this->needFirstFrets()) {
             imagefilledrectangle(
                 $this->img,
@@ -70,10 +64,34 @@ class FretBoard
                 $this->y,
                 static::BASE_WIDTH - static::BORDER - 1,
                 $this->y + 2,
-                $black
+                imagecolorallocate($this->img, 0, 0, 0)
+            );
+            $this->y += 2;
+        } else {
+            Image::writeText(
+                $this->img,
+                $this->x - static::BORDER,
+                $this->y + 2 * static::BASE_HEIGHT,
+                (string) ($this->fretMin + 2)
             );
         }
-        $y += 2;
+        // then the other frets
+        for ($i = 0; $i < $this->getNbFrets(); $i++) {
+            $this->makeFrets(
+                $i,
+                $this->fretMin + $i +1
+            );
+        }
+    }
+
+    protected function makeFrets($line, $fret)
+    {
+        $black = imagecolorallocate($this->img, 0, 0, 0);
+        $grid = imagecolorallocate($this->img, 140, 120, 100);
+
+        $fingers = $this->getFingersByFret($fret);
+
+        $y = $this->y + $line * static::BASE_HEIGHT;
         imageline($this->img, $this->x, $y, static::BASE_WIDTH - static::BORDER - 1, $y, $grid);
         imageline($this->img, $this->x, $y + static::BASE_HEIGHT, static::BASE_WIDTH - static::BORDER - 1, $y + static::BASE_HEIGHT, $grid);
         for ($i = 0; $i < 4; $i++) {
@@ -107,7 +125,31 @@ class FretBoard
 
     protected function getNbFrets()
     {
-        return 4;
+        return $this->fretMax - $this->fretMin;
+    }
+
+    /**
+     * get the max and min line to show for the fret
+     * @return array [ min, max ]
+     */
+    protected function getBaseLine()
+    {
+        $fingers = array_filter(
+            $this->fingers,
+            function ($finger) {
+                return $finger != 0;
+            }
+        );
+        if (empty($fingers)) {
+            return [1, static::NB_FRET_MIN];
+        }
+        $min = min($fingers) - 1;
+        $max = max($fingers);
+
+        if ($max - $min < static::NB_FRET_MIN) {
+            $max = $min + static::NB_FRET_MIN;
+        }
+        return [ $min, $max ];
     }
 
     protected function getFingersByFret($fret)
@@ -115,7 +157,7 @@ class FretBoard
         return array_keys(array_filter(
             $this->fingers,
             function ($finger) use ($fret) {
-                return $finger === ($fret + 1);
+                return $finger === $fret;
             }
         ));
     }
