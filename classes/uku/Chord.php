@@ -8,7 +8,7 @@ class Chord
 {
     const BASE_WIDTH = FretBoard::BASE_WIDTH + 10;
     const BASE_HEIGHT = 14;
-    const NAME_HEIGHT = 12;
+    const FONT_SIZE = 12;
     const BORDER_Y = 10;
 
     protected $x = 0;
@@ -38,12 +38,15 @@ class Chord
         );
 
         $y = static::BASE_HEIGHT - 1;
+        $nameLength = mb_strlen($this->name);
+        $fontSize = static::FONT_SIZE;
+
         Image::writeText(
             $this->img,
             $this->name,
-            floor(FretBoard::BASE_WIDTH / 2) - (mb_strlen($this->name) - 1) * 4,
+            ceil(FretBoard::BASE_WIDTH / 2) - ($nameLength - 1) * 4,
             $y,
-            static::NAME_HEIGHT
+            $fontSize
         );
 
         $y += 6;

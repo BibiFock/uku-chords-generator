@@ -14,7 +14,7 @@ use uku\Chord;
 
 $options = [
     'fingers' => explode(',', ($_REQUEST['fingers'] ?? '0,1,2,4')),
-    'name' => $_REQUEST['name'] ?? 'C'
+    'name' => $_REQUEST['name'] ?? 'C',
 ];
 
 $chord = new Chord($options);
