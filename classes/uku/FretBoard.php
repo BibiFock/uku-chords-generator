@@ -81,7 +81,7 @@ class FretBoard
         for ($i = 0; $i < $this->getNbFrets(); $i++) {
             $this->makeFrets(
                 $i,
-                $this->fretMin + $i +1
+                $this->fretMin + $i + 1
             );
         }
     }
@@ -151,7 +151,7 @@ class FretBoard
         $diff = $max - $min;
         if ($diff < static::NB_FRET_MIN) {
             $max = $min + static::NB_FRET_MIN;
-            if ($diff <= 2) {
+            if ($min > 0 && $diff <= 2) {
                 $min--;
                 $max--;
             }

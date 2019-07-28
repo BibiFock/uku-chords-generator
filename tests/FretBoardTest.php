@@ -41,6 +41,11 @@ class FretBoardTest extends TestCase
         $this->getBaseLine('0,6,5,0', [3, 7]);
     }
 
+    public function testGetBaseLineShouldCenterFingerButNotOutOfFrets()
+    {
+        $this->getBaseLine('0,1,0,0', [0, 4]);
+    }
+
     public function testGetBaseLineShouldTookShowAllFingers()
     {
         $this->getBaseLine('1,1,9,10', [0, 10]);
