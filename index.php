@@ -12,15 +12,20 @@ spl_autoload_register(
 
 use uku\Chord;
 
+$debug = isset($_REQUEST['debug']) && $_REQUEST['debug'] === 'true';
+$fingers = isset($_REQUEST['fingers']) ? $_REQUEST['fingers'] : null ;
+$name = isset($_REQUEST['name']) ? $_REQUEST['name'] : null ;
+
+
 $options = [
-    'fingers' => explode(',', ($_REQUEST['fingers'] ?? '0,1,2,4')),
-    'name' => $_REQUEST['name'] ?? 'C',
+    'fingers' => explode(',', (Chord::validFingers($fingers) ?? '0,1,2,4')),
+    'name' => Chord::validName($name) ?? 'C'
 ];
 
 $chord = new Chord($options);
 $img = $chord->getImage();
 
-if (empty($_REQUEST['debug'])) {
+if (!$debug) {
     header('Content-type: image/png');
     header('Content-Disposition: inline; filename="' . $options['name'] . '"');
 }

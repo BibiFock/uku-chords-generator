@@ -18,6 +18,27 @@ class Chord
     protected $name = false;
     protected $img = false;
 
+    public static function validFingers($fingers)
+    {
+        if (!empty($fingers)
+            && preg_match('/^[0-9]{1,2},[0-9]{1,2},[0-9]{1,2},[0-9]{1,2}$/', $fingers)
+        ) {
+            return $fingers;
+        }
+        return null;
+    }
+
+    public static function validName($name)
+    {
+        if (!empty($name)
+            && preg_match('/^([A-G][^\s,;]*)$/', $name)
+        ) {
+            return $name;
+        }
+
+        return null;
+    }
+
     public function __construct($options = [])
     {
         foreach ($options as $key => $value) {

@@ -34,7 +34,7 @@
             for (var i in dico) {
                 var img = document.createElement('img');
                 var chord = dico[i];
-                img.src = './chords.php?name=' + encodeURIComponent(chord.name) + '&fingers=' + chord.fingers;
+                img.src = 'index.php?name=' + encodeURIComponent(chord.name) + '&fingers=' + chord.fingers;
                 img.title = chord.name;
                 el.append(img);
             }
